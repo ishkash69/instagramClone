@@ -1,0 +1,29 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Montserrat-Bold.ttf",
+      "sha1": "8f23dacf7d2f4aa9be53c957f48009f610965be5"
+    },
+    {
+      "path": "src/assets/fonts/Montserrat-ExtraBold.ttf",
+      "sha1": "172ea7eb3e00591802c16df73abc27386fc11cd7"
+    },
+    {
+      "path": "src/assets/fonts/Montserrat-Medium.ttf",
+      "sha1": "d7ddcd6682a72ff6044cf2015a71b183494ce320"
+    },
+    {
+      "path": "src/assets/fonts/Montserrat-Regular.ttf",
+      "sha1": "21ead490649992f7200fc1f3839b9fc08e882afe"
+    },
+    {
+      "path": "src/assets/fonts/Montserrat-SemiBold.ttf",
+      "sha1": "6b005ad9e70be1343f8e7e0c157d4aad66b285c9"
+    },
+    {
+      "path": "src/assets/fonts/The Beautiful Night.ttf",
+      "sha1": "534ca6d7137d4aa9bfad693024920aa80f56f4dd"
+    }
+  ]
+}
