@@ -4,68 +4,22 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity} from 'react-
 import imagePath from '../constants/imagePath';
 import colors from '../styles/colors';
 import { moderateScale, moderateScaleVertical } from '../styles/responsiveSize';
-
+import { Users } from '../dummyData/users';
 
 
 // create a component
-const Stories = () => {
-    const[storiesdata,setStoriesData] = useState([
-        {
-            image: imagePath.dm,
-            user: "any userrrrrrrrrrr"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        {
-            image: imagePath.dm,
-            user: "any user"
-        },
-        
-    ])
+ const Stories = () => {
+  
 
     const renderItem = ({item,index})=>{
         return(
             <TouchableOpacity key={index}
             style={{alignItems:'center',justifyContent:'center',}}
              >
-                <Image style={styles.stories} source={item.image}/>
+                <Image  style={styles.stories} source={item.image}/>
                 <Text style={styles.userName}>
                 {item.user.length>11?
-                 item.user.slice(0,10).toLowerCase()
+                 item.user.slice(0,8).toLowerCase()
                   +"...":item.user.toLowerCase()}
                   </Text>
             </TouchableOpacity>
@@ -75,7 +29,7 @@ const Stories = () => {
         <View style={styles.container}>
           <FlatList
           horizontal={true}
-          data={storiesdata}
+          data={Users}
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
           />
@@ -88,14 +42,12 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical:moderateScaleVertical(12),
+        marginVertical:moderateScaleVertical(8),
     },
     stories:{
-        borderRadius: 50,
-            resizeMode: 'center',
+        borderRadius: moderateScale(50),
             height:moderateScaleVertical(70),
             width:moderateScale(70),
-            tintColor:colors.white,
             marginLeft:moderateScale(14),
             borderWidth:3,
             borderColor:"#ff8501", 
