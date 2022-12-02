@@ -1,4 +1,5 @@
 //import liraries
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import strings from './src/constants/lang';
@@ -10,18 +11,21 @@ import { getLang, storeLang } from './src/utils/utils';
 // create a component
 const App = () => {
   useEffect(() => {
-    changeLang()
+    getLang();
   }, [])
 
-  const changeLang = async () => {
-    let curr_lang = await getLang();
-    if (curr_lang!==null) {
-      strings.setLanguage(curr_lang)
-      console.log(curr_lang, "respose current language")
-    } else {
-      strings.setLanguage("en")
+  const getLang = async () => {
+    try {
+      let value = await AsyncStorage.getItem('language');
+      console.log(value, "language")
+      if (!!value) {
+        strings.setLanguage(value)
+      } else {
+        strings.setLanguage("en")
+      }
+    } catch (error) {
+      console.log(error, 'error')
     }
-
   }
   return (
 

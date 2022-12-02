@@ -9,12 +9,3 @@ export const storeLang = async (value) => {
   }
   }
 
-  export const getLang = async () => {
-    try {
-     let value =  await AsyncStorage.getItem('language');
-     console.log(value,"value in utils ++ getlang")
-      return value;
-    } catch (error) {
-      console.log(error, 'error')
-    }
-  }
