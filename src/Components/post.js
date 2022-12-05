@@ -16,10 +16,12 @@ const Post = ({
             {/* <Divider width={1} orientation="vertical" /> */}
             <PostHeader post={post} />
             <PostImage post={post} />
-            <View style={{ marginHorizontal: moderateScale(8), }}>
+            <View style={{ marginHorizontal: moderateScale(8) }}>
                 <PostFootterIcons post={post} />
                 <Likes post={post} />
                 <Caption post={post} />
+                <CommentsSection post={post} />
+                <Comments post={post} />
             </View>
 
         </View>
@@ -41,13 +43,15 @@ const PostHeader = ({ post }) => {
             </View>
 
             <TouchableOpacity activeOpacity={1}
-             style={{ alignItems: 'center', justifyContent: 'center' }}>
+                style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Text
-                 style={{ fontWeight: '900',
-                  fontSize: textScale(16), 
-                  transform:
-                   [{ rotate: '90deg' }],
-                    color: colors.white }}>...</Text>
+                    style={{
+                        fontWeight: '900',
+                        fontSize: textScale(16),
+                        transform:
+                            [{ rotate: '90deg' }],
+                        color: colors.white
+                    }}>...</Text>
             </TouchableOpacity>
         </TouchableOpacity>
     )
@@ -105,8 +109,8 @@ const PostFootterIcons = ({
                         source={imagePath.comments} />
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={1}>
-                    <Image 
-                        style={{...styles.footterIcons,transform:[{rotate:"10deg"}]}}
+                    <Image
+                        style={{ ...styles.footterIcons, transform: [{ rotate: "10deg" }] }}
                         source={imagePath.share} />
                 </TouchableOpacity>
             </View>
@@ -142,29 +146,51 @@ const Likes = ({ post }) => {
 
 const Caption = ({ post }) => {
     return (
-        <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: moderateScaleVertical(4)
-        }}>
-
+        <View style={{ flexDirection: 'row', marginTop: moderateScaleVertical(4) }}>
             <TouchableOpacity activeOpacity={1}>
-                <Text style={{
-                    color: colors.white,
-                    fontSize: textScale(16),
-                    fontWeight: "700"
-                }}>{post.user}</Text>
+                <Text style={{ color: colors.white }}>
+                    <Text style={{ fontWeight: "700", fontSize: textScale(16) }}>{post.user}{"  "}</Text>
+                    {post.caption}
+                </Text>
             </TouchableOpacity>
-            <Text style={{
-                color: colors.white,
-                fontSize: textScale(16),
-                fontWeight: "500"
-            }}>{"   "}{post.caption}</Text>
         </View>
 
     )
 }
 
+// comments section
+const CommentsSection = ({ post }) => {
+    return (
+        <TouchableOpacity
+            activeOpacity={1}
+            style={{ marginTop: moderateScaleVertical(4), }}>
+            {!!post.comments.length ? <Text style={{ color: colors.gray }}>
+                {"View "}{post.comments.length > 1 ? "all " : ''}{post.comments.length}{' '}
+                {post.comments.length > 1 ? 'comments' : 'comment'}
+            </Text> : null}
+        </TouchableOpacity>
+    )
+}
+
+const Comments = ({ post }) => {
+    return (
+        <>
+            {post.comments.map((comment, index) => (
+                <View key={index} style={{ flexDirection: 'row', marginTop: moderateScaleVertical(4) }}>
+                    <TouchableOpacity activeOpacity={1}>
+                        <Text style={{ color: colors.white }}>
+                            <Text style={{ fontWeight: "600" }}>{comment.user}{"  "}</Text>
+                            {comment.comment}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            ))
+            }
+
+        </>
+
+    )
+}
 
 // define your styles
 const styles = StyleSheet.create({

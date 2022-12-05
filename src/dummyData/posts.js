@@ -11,7 +11,7 @@ export const POSTS = [
         comments: [
             {
                 user: "the_begginner",
-                comment: "this is very nice post"
+                comment: "this is very nice post this is very nice post this is very nice post this is very nice post"
             },
             {
                 user: "btb",
