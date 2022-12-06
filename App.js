@@ -7,14 +7,13 @@ import Routes from './src/Navigation/Routes';
 
 import colors from './src/styles/colors';
 
-import { notificationListener, requestUserPermission,onDisplayNotification } from './src/utils/NotificationService';
+import { notificationListener, requestUserPermission, } from './src/utils/NotificationService';
 
 // create a component
 const App = () => {
   useEffect(() => {
     requestUserPermission()
     notificationListener()
-    // onDisplayNotification()
     getLang();
   }, [])
   const getLang = async () => {

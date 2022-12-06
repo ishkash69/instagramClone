@@ -135,11 +135,11 @@ const Likes = ({ post }) => {
         <View style={{
             alignItems: 'center',
             flexDirection: 'row',
-
         }}>
             <Text
                 style={{ color: colors.white, fontSize: textScale(14), fontWeight: "700" }}>
-                {post.likes.toLocaleString("en")} {strings.LIKES}</Text>
+                {post.likes.toLocaleString("en")} {strings.LIKES}
+            </Text>
         </View>
     )
 }
@@ -186,9 +186,7 @@ const Comments = ({ post }) => {
                 </View>
             ))
             }
-
         </>
-
     )
 }
 

@@ -4,4 +4,5 @@ export {default as HomeReels} from "./HomeReels/HomeReels";
 export {default as HomeNotification} from "./HomeNotification/HomeNotification";
 export {default as HomeProfile} from "./HomeProfile/HomeProfile";
 export {default as ChangeLanguage} from "./ChangeLang"
+export {default as PostScreen} from "./PostScreen/PostScreen"
 

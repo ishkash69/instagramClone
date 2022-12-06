@@ -29,7 +29,8 @@ const TabRoutes = (props) => {
                 tabBarStyle: {
                     backgroundColor: colors.black,
                     paddingTop: moderateScaleVertical(30),
-                    paddingBottom: moderateScaleVertical(30)
+                    paddingBottom: moderateScaleVertical(30),
+                    zIndex:999
                 }
             }}
         >

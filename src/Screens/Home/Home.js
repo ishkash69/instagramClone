@@ -11,6 +11,7 @@ import colors from '../../styles/colors';
 import { moderateScale } from '../../styles/responsiveSize';
 import { POSTS } from '../../dummyData/posts';
 import { getLang, storeLang } from '../../utils/utils';
+import navigationStrings from '../../constants/navigationStrings';
 // create a component
 const Home = ({navigation,route}) => {
     return (
@@ -19,6 +20,11 @@ const Home = ({navigation,route}) => {
                 logo={imagePath.headerLogo}
                 icon1={imagePath.more}
                 icon2={imagePath.dm}
+                showbadge
+                showHeaderRightLogo
+                onAddPostPress={()=>{
+                    navigation.navigate(navigationStrings.POSTSCREEN)
+                }}
             />
             <Stories />
             <FlatList
