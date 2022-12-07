@@ -6,7 +6,7 @@ import CommonComponent from '../Components/CommonComponent';
 import strings from '../constants/lang';
 import colors from '../styles/colors';
 import { moderateScaleVertical } from '../styles/responsiveSize';
-import { storeLang } from '../utils/utils';
+import { storeLang, } from '../utils/utils';
 // create a component
 const ChangeLang = ({navigation,route}) => {
 

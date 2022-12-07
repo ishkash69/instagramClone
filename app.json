@@ -1,4 +1,5 @@
 {
   "name": "instagramClone",
-  "displayName": "instagramClone"
+  "displayName": "instagramClone",
+  "ios": {"userInterfaceStyle": "automatic"}
 }

@@ -1,3 +1,3 @@
 export default{
-    LIKES:"الإعجابات"
+    LIKES:"الإعجابات",
 }
