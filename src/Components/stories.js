@@ -5,19 +5,19 @@ import imagePath from '../constants/imagePath';
 import colors from '../styles/colors';
 import { moderateScale, moderateScaleVertical } from '../styles/responsiveSize';
 import { Users } from '../dummyData/users';
+import { useSelector } from 'react-redux';
 
 
 // create a component
  const Stories = () => {
-  
-
+    const theme = useSelector(state => state.themeReducer.mode)
     const renderItem = ({item,index})=>{
         return(
             <TouchableOpacity key={index}
             style={{alignItems:'center',justifyContent:'center',}}
              >
                 <Image  style={styles.stories} source={item.image}/>
-                <Text style={styles.userName}>
+                <Text style={theme === 'light'?styles.userNameLight:styles.userNameDark}>
                 {item.user.length>11?
                  item.user.slice(0,8).toLowerCase()
                   +"...":item.user.toLowerCase()}
@@ -53,9 +53,14 @@ const styles = StyleSheet.create({
             borderColor:"#ff8501", 
               
     },
-    userName:{
+    userNameDark:{
         marginTop:moderateScaleVertical(2),
         color:colors.white,
+        marginLeft:moderateScale(18),
+    },
+    userNameLight:{
+        marginTop:moderateScaleVertical(2),
+        color:colors.black,
         marginLeft:moderateScale(18),
     }
 });

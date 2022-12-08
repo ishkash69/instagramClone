@@ -1,6 +1,7 @@
 //import liraries
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
 import CommonComponent from '../../Components/CommonComponent';
 import navigationStrings from '../../constants/navigationStrings';
 import colors from '../../styles/colors';
@@ -9,10 +10,9 @@ import { moderateScale, moderateScaleVertical, textScale } from '../../styles/re
 
 // create a component
 const HomeProfile = ({navigation, routes}) => {
-
-    
+    const theme = useSelector(state=>state.themeReducer.mode)
     return (
-        <View style={styles.container}>
+        <View style={theme=== 'light'? styles.containerLight:styles.containerDark}>
             <CommonComponent
             text={"Change Language"}
             arrow={">"}
@@ -27,9 +27,13 @@ const HomeProfile = ({navigation, routes}) => {
 
 // define your styles
 const styles = StyleSheet.create({
-    container: {
+    containerDark: {
         flex: 1,
         backgroundColor:colors.black
+    },
+    containerLight: {
+        flex: 1,
+        backgroundColor:colors.white
     },
 });
 

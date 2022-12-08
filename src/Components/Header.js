@@ -1,6 +1,7 @@
 //import liraries
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
 import navigationStrings from '../constants/navigationStrings';
 import colors from '../styles/colors';
 import fontFamily from '../styles/fontFamily';
@@ -16,49 +17,43 @@ const Header = ({
     iconContainer,
     middleText,
     leftArrow,
-    onAddPostPress =()=>{},
+    onAddPostPress = () => { },
     showbadge,
     showHeaderRightLogo,
     onPressLogo,
     onPressBackArrow,
-    
+
 
 }) => {
+    const theme = useSelector(state => state.themeReducer.mode)
     return (
         <View style={{ ...styles.container, ...headerStyle }}>
-            <TouchableOpacity onPress={leftArrow? onPressBackArrow:null || logo? onPressLogo: null}>
-               {logo? <Image style={{ ...logoStyle, ...styles.logoStyle }} source={logo} />:null}
-                {leftArrow?<Image style={{
-                    tintColor:colors.white,
-                    height:moderateScaleVertical(18),
-                    width:moderateScale(18)
-                    }} source={leftArrow}/>:null}
+            <TouchableOpacity onPress={leftArrow ? onPressBackArrow : null || logo ? onPressLogo : null}>
+                {logo ? <Image style={{ ...logoStyle, ...theme === "light" ? styles.logoStyleLight : styles.logoStyleDark }} source={logo} /> : null}
+                {leftArrow ? <Image style={
+                    theme === 'light' ? styles.arrowLight : styles.arrowDark
+                } source={leftArrow} /> : null}
             </TouchableOpacity>
-           {middleText? <View style={{flex:1}}>
-            <Text
-            style={{color:colors.white,
-                fontSize:textScale(20),
-                fontWeight:'bold',
-                textAlign:'center',
-                marginRight:moderateScaleVertical(20)
-            }}
-            >{middleText}</Text>
-            </View>:null}
+            {middleText ? <View style={{ flex: 1 }}>
+                <Text
+                    style={theme=== 'light'?styles.middleTextLight:styles.middleTextDark }
+                >{middleText}</Text>
+            </View> : null}
 
-           {showHeaderRightLogo? <View style={{ ...styles.iconContainer, ...iconContainer }}>
+            {showHeaderRightLogo ? <View style={{ ...styles.iconContainer, ...iconContainer }}>
                 <TouchableOpacity
-                onPress={onAddPostPress}
+                    onPress={onAddPostPress}
                 >
-                    <Image style={{ ...styles.icons, ...iconStyle }} source={icon1} />
+                    <Image style={{ ...theme === 'light' ? styles.iconsLight : styles.iconsDark, ...iconStyle }} source={icon1} />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    {showbadge?<View style={ styles.unReadBadge}>
-                            <Text style={styles.unReadBadgeText}>{"12"}</Text>
-                        </View>:null}
-                    <Image style={{ ...styles.icons, ...iconStyle }} source={icon2} />
+                    {showbadge ? <View style={styles.unReadBadge}>
+                        <Text style={styles.unReadBadgeText}>{"12"}</Text>
+                    </View> : null}
+                    <Image style={{ ...theme === 'light' ? styles.iconsLight : styles.iconsDark, ...iconStyle }} source={icon2} />
                 </TouchableOpacity>
-            </View>:null
-}
+            </View> : null
+            }
         </View>
     );
 };
@@ -69,41 +64,77 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginHorizontal: moderateScale(16),
+        marginHorizontal: moderateScale(12),
     },
     iconContainer: {
-        flex:0.4,
+        flex: 0.4,
         flexDirection: 'row',
         justifyContent: 'space-between',
-       
+
     },
-    logoStyle: {
+    logoStyleDark: {
         tintColor: colors.white,
         height: moderateScaleVertical(50),
-        width: moderateScale(100),
-        resizeMode: 'contain'
+        width: moderateScale(150),
+        // resizeMode: 'contain'
     },
-    icons: {
-        width: moderateScale(30),
-        height: moderateScaleVertical(30),
+    logoStyleLight: {
+        tintColor: colors.black,
+        height: moderateScaleVertical(50),
+        width: moderateScale(150),
+        // resizeMode: 'contain'
+    },
+    iconsDark: {
+        width: moderateScale(28),
+        height: moderateScaleVertical(28),
         resizeMode: "contain",
         tintColor: colors.white,
     },
-    unReadBadge:{
-        position:'absolute',
-        backgroundColor:colors.red,
-        left:14,
-        bottom:20,
-        width:25,
-        height:18,
-        borderRadius:25,
-        alignItems:'center',
-        justifyContent:'center',
-        zIndex:100,
+    iconsLight: {
+        width: moderateScale(28),
+        height: moderateScaleVertical(28),
+        resizeMode: "contain",
+        tintColor: colors.black,
     },
-    unReadBadgeText:{
-        color:colors.white,
-        fontWeight:'bold'
+    unReadBadge: {
+        position: 'absolute',
+        backgroundColor: colors.red,
+        left: 10,
+        bottom: 20,
+        width: 25,
+        height: 18,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 100,
+    },
+    unReadBadgeText: {
+        color: colors.white,
+        fontWeight: 'bold'
+    },
+    arrowDark: {
+        tintColor: colors.white,
+        height: moderateScaleVertical(18),
+        width: moderateScale(18)
+    },
+    arrowLight: {
+        tintColor: colors.black,
+        height: moderateScaleVertical(18),
+        width: moderateScale(18)
+    },
+    middleTextDark: {
+        color: colors.white,
+        fontSize: textScale(20),
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginRight: moderateScaleVertical(20)
+    },
+    middleTextLight: {
+        color: colors.black,
+        fontSize: textScale(20),
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginRight: moderateScaleVertical(20)
     }
 });
 

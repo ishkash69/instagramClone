@@ -9,12 +9,14 @@ import { moderateScale, moderateScaleVertical } from '../styles/responsiveSize';
 import HomeStack from './HomeStack';
 import * as Screens from "../Screens"
 import ProfileStack from './ProfileStack';
+import { useSelector } from 'react-redux';
 
 const BottomTab = createBottomTabNavigator();
 
 
 // create a component
 const TabRoutes = (props) => {
+    const theme = useSelector(state=> state.themeReducer.mode)
     return (
         <BottomTab.Navigator
             tabBar={(tabsProps) => (
@@ -25,9 +27,9 @@ const TabRoutes = (props) => {
             initialRouteName={navigationStrings.HOME}
             screenOptions={{
                 tabBarShowLabel: false,
-                tabBarActiveTintColor: colors.white,
+                tabBarActiveTintColor: theme === 'light'?colors.black:colors.white,
                 tabBarStyle: {
-                    backgroundColor: colors.black,
+                    backgroundColor: theme=== 'light'? colors.white:colors.black,
                     paddingTop: moderateScaleVertical(30),
                     paddingBottom: moderateScaleVertical(30),
                     zIndex:999
@@ -43,7 +45,7 @@ const TabRoutes = (props) => {
                         return focused ? (
                             <Image
                                 style={{
-                                    tintColor: colors.white,
+                                    tintColor: theme=== 'light'? colors.black:colors.white,
                                     height: moderateScaleVertical(30),
                                     width: moderateScale(30)
                                 }}
@@ -51,7 +53,7 @@ const TabRoutes = (props) => {
                         ) : (
                             <Image
                                 style={{
-                                    tintColor: colors.white,
+                                    tintColor: theme === 'light'?colors.black:colors.white,
                                     opacity: 0.6,
                                     height: moderateScaleVertical(30),
                                     width: moderateScale(30)
@@ -70,7 +72,7 @@ const TabRoutes = (props) => {
                         return focused ? (
                             <Image source={imagePath.search}
                                 style={{
-                                    tintColor: colors.white,
+                                    tintColor: theme === 'light'?colors.black:colors.white,
                                     height: moderateScaleVertical(30),
                                     width: moderateScale(30)
                                 }}
@@ -78,7 +80,7 @@ const TabRoutes = (props) => {
                         ) :
                             <Image source={imagePath.search}
                                 style={{
-                                    tintColor: colors.white,
+                                    tintColor: theme === 'light'?colors.black:colors.white,
                                     opacity: 0.6,
                                     height: moderateScaleVertical(30),
                                     width: moderateScale(30)
@@ -96,8 +98,7 @@ const TabRoutes = (props) => {
                         return focused ? (
                             <Image source={imagePath.reelsIcon}
                                 style={{
-                                    tintColor: colors.white,
-
+                                    tintColor: theme === 'light'?colors.black:colors.white,
                                     height: moderateScaleVertical(30),
                                     width: moderateScale(30)
                                 }}
@@ -105,7 +106,7 @@ const TabRoutes = (props) => {
                         ) :
                             <Image source={imagePath.reelsIcon}
                                 style={{
-                                    tintColor: colors.white,
+                                    tintColor: theme === 'light'?colors.black:colors.white,
                                     opacity: 0.6,
                                     height: moderateScaleVertical(30),
                                     width: moderateScale(30)
@@ -123,8 +124,7 @@ const TabRoutes = (props) => {
                         return focused ? (
                             <Image source={imagePath.heart}
                                 style={{
-                                    tintColor: colors.white,
-
+                                    tintColor: theme === 'light'?colors.black:colors.white,
                                     height: moderateScaleVertical(30),
                                     width: moderateScale(30)
                                 }}
@@ -132,7 +132,7 @@ const TabRoutes = (props) => {
                         ) :
                             <Image source={imagePath.like}
                                 style={{
-                                    tintColor: colors.white,
+                                    tintColor: theme === 'light'?colors.black:colors.white,
                                     opacity: 0.6,
                                     height: moderateScaleVertical(30),
                                     width: moderateScale(30)

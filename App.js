@@ -1,7 +1,7 @@
 //import liraries
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { Appearance, SafeAreaView, StyleSheet } from 'react-native';
 import strings from './src/constants/lang';
 import Routes from './src/Navigation/Routes';
 
@@ -13,21 +13,31 @@ import { themeAction } from './src/redux/actions/themeAction';
 
 // create a component
 const App = () => {
-
-
   useEffect(() => {
     gettheme();
+    getLang();
     requestUserPermission()
     notificationListener()
-    getLang();
+    const listener = Appearance.addChangeListener(colorTheme=>{
+      // console.log(colorTheme,"useEffect")
+      store.dispatch(themeAction(colorTheme.colorScheme=== 'light'? 'light': 'dark'))
+      setMode(colorTheme.colorScheme)
+  })
+  return()=>{
+      listener;
+  } 
   }, [])
+  const[mode,setMode]=useState()
+  console.log(mode,'mode in the app.js')
 
 
   const gettheme = async () => {
     try {
       let theme = await AsyncStorage.getItem('theme')
-      console.log(theme, "theme mode")
+      // setMode(theme)
+      // console.log(theme, "theme mode")
       store.dispatch(themeAction(theme === 'dark' ? "dark" : "light"))
+      
     } catch (error) {
       console.log(error, "error")
     }
@@ -37,7 +47,7 @@ const App = () => {
   const getLang = async () => {
     try {
       let value = await AsyncStorage.getItem('language');
-      console.log(value, "language")
+      // console.log(value, "language")
       if (!!value) {
         strings.setLanguage(value)
       } else {
@@ -48,7 +58,7 @@ const App = () => {
     }
   }
   return (
-    <SafeAreaView style={styles.containerDark}>
+    <SafeAreaView style={mode==="light"? styles.containerLight:styles.containerDark}>
       <Provider store={store}>
         <Routes />
       </Provider>

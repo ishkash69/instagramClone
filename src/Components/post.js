@@ -1,6 +1,7 @@
 //import liraries
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import imagePath from '../constants/imagePath';
 import strings from '../constants/lang';
 import colors from '../styles/colors';
@@ -10,7 +11,7 @@ const Post = ({
     post,
 
 }) => {
-
+    const theme = useSelector(state => state.themeReducer.mode)
     return (
         <View style={styles.container}>
             {/* <Divider width={1} orientation="vertical" /> */}
@@ -29,6 +30,7 @@ const Post = ({
 };
 // post header
 const PostHeader = ({ post }) => {
+    const theme = useSelector(state => state.themeReducer.mode)
     return (
         <TouchableOpacity activeOpacity={1} style={styles.postHeader}>
             <View style={styles.profileAndUserNameContainer}>
@@ -38,7 +40,7 @@ const PostHeader = ({ post }) => {
 
                 <Text>   </Text>
                 <TouchableOpacity activeOpacity={1}>
-                    <Text style={styles.userName}>{post.user}</Text>
+                    <Text style={theme === 'light' ? styles.userNameLight : styles.userNameDark}>{post.user}</Text>
                 </TouchableOpacity>
             </View>
 
@@ -72,6 +74,8 @@ const PostFootterIcons = ({
     post,
 
 }) => {
+    const theme = useSelector(state => state.themeReducer.mode)
+
     const [save, setSave] = useState(!save)
     const [heart, setHeart] = useState(!heart)
 
@@ -97,20 +101,28 @@ const PostFootterIcons = ({
                     onPress={onLike}
                     activeOpacity={1} >
                     {heart ? <Image
-                        style={styles.footterIcons}
+                        style={theme === 'light' ? styles.footterIconsLight : styles.footterIconsDark}
                         source={imagePath.like} /> :
                         <Image
-                            style={{ ...styles.footterIcons, tintColor: colors.red }}
+                            style={{
+                                ...theme === 'light' ?
+                                    styles.footterIconsLight : styles.footterIconsDark,
+                                tintColor: colors.red
+                            }}
                             source={imagePath.heart} />}
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={1}>
                     <Image
-                        style={styles.footterIcons}
+                        style={theme === 'light' ? styles.footterIconsLight : styles.footterIconsDark}
                         source={imagePath.comments} />
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={1}>
                     <Image
-                        style={{ ...styles.footterIcons, transform: [{ rotate: "10deg" }] }}
+                        style={{
+                            ...theme === 'light' ?
+                                styles.footterIconsLight : styles.footterIconsDark,
+                            transform: [{ rotate: "10deg" }]
+                        }}
                         source={imagePath.share} />
                 </TouchableOpacity>
             </View>
@@ -120,24 +132,25 @@ const PostFootterIcons = ({
                 }}
                 style={{ alignItems: 'center', }}>
                 {save ? <Image
-                    style={styles.footterIcons}
+                    style={theme === 'light' ? styles.footterIconsLight : styles.footterIconsDark}
                     source={imagePath.savePost} />
                     :
                     <Image
-                        style={styles.footterIcons}
+                        style={theme === 'light' ? styles.footterIconsLight : styles.footterIconsDark}
                         source={imagePath.afterSave} />}
             </TouchableOpacity>
         </View>
     )
 }
 const Likes = ({ post }) => {
+    const theme = useSelector(state=>state.themeReducer.mode)
     return (
         <View style={{
             alignItems: 'center',
             flexDirection: 'row',
         }}>
             <Text
-                style={{ color: colors.white, fontSize: textScale(14), fontWeight: "700" }}>
+                style={theme==='light'?styles.likeLight:styles.likeDark}>
                 {post.likes.toLocaleString("en")} {strings.LIKES}
             </Text>
         </View>
@@ -145,10 +158,11 @@ const Likes = ({ post }) => {
 }
 
 const Caption = ({ post }) => {
+    const theme = useSelector(state=>state.themeReducer.mode)
     return (
         <View style={{ flexDirection: 'row', marginTop: moderateScaleVertical(4) }}>
             <TouchableOpacity activeOpacity={1}>
-                <Text style={{ color: colors.white }}>
+                <Text style={theme==='light'? styles.captionLight:styles.captionDark}>
                     <Text style={{ fontWeight: "700", fontSize: textScale(16) }}>{post.user}{"  "}</Text>
                     {post.caption}
                 </Text>
@@ -173,12 +187,13 @@ const CommentsSection = ({ post }) => {
 }
 
 const Comments = ({ post }) => {
+    const theme = useSelector(state=>state.themeReducer.mode)
     return (
         <>
             {post.comments.map((comment, index) => (
                 <View key={index} style={{ flexDirection: 'row', marginTop: moderateScaleVertical(4) }}>
                     <TouchableOpacity activeOpacity={1}>
-                        <Text style={{ color: colors.white }}>
+                        <Text style={theme==='light'? styles.captionLight:styles.captionDark}>
                             <Text style={{ fontWeight: "600" }}>{comment.user}{"  "}</Text>
                             {comment.comment}
                         </Text>
@@ -213,15 +228,42 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         // borderColor: "#ff8501"
     },
-    userName: {
+    userNameDark: {
         color: colors.white,
         fontWeight: 'bold',
         fontSize: textScale(16)
     },
-    footterIcons: {
+    userNameLight: {
+        color: colors.black,
+        fontWeight: 'bold',
+        fontSize: textScale(16)
+    },
+    footterIconsDark: {
         height: moderateScaleVertical(30),
         width: moderateScale(30),
         tintColor: colors.white
+    },
+    footterIconsLight: {
+        height: moderateScaleVertical(30),
+        width: moderateScale(30),
+        tintColor: colors.black
+    },
+    likeDark: {
+        color: colors.white,
+        fontSize: textScale(14),
+        fontWeight: "700"
+
+    },
+    likeLight: {
+        color: colors.black,
+        fontSize: textScale(14),
+        fontWeight: "700"
+    },
+    captionDark:{
+        color: colors.white 
+    },
+    captionLight:{
+        color: colors.black 
     }
 
 });

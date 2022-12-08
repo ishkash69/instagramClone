@@ -2,6 +2,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import RNRestart from 'react-native-restart';
+import { useSelector } from 'react-redux';
 import CommonComponent from '../Components/CommonComponent';
 import strings from '../constants/lang';
 import colors from '../styles/colors';
@@ -9,7 +10,7 @@ import { moderateScaleVertical } from '../styles/responsiveSize';
 import { storeLang, } from '../utils/utils';
 // create a component
 const ChangeLang = ({navigation,route}) => {
-
+    const theme = useSelector(state=> state.themeReducer.mode)
     const setText = async (value)=>{
         strings.setLanguage(value);
         storeLang(value)
@@ -18,7 +19,7 @@ const ChangeLang = ({navigation,route}) => {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={theme === 'light'? styles.containerLight:styles.containerDark}>
             <CommonComponent 
             text={"English"}
             onPress={()=>{setText("en")}}
@@ -45,11 +46,14 @@ const ChangeLang = ({navigation,route}) => {
 
 // define your styles
 const styles = StyleSheet.create({
-    container: {
+    containerDark: {
         flex: 1,
         backgroundColor: colors.black
     },
-
+    containerLight: {
+        flex: 1,
+        backgroundColor: colors.white
+    },
   
 });
 
