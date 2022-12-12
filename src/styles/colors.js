@@ -83,5 +83,6 @@ export default {
   brown: '#fdf0d5',
   darkBrown: '#6f4400',
   googleColor: '#E5E5E5',
-  themeRed : "#CB0504"
+  themeRed : "#CB0504",
+  
 };

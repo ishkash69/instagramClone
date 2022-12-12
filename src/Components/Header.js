@@ -22,6 +22,8 @@ const Header = ({
     showHeaderRightLogo,
     onPressLogo,
     onPressBackArrow,
+    onTickPress,
+    tick,
 
 
 }) => {
@@ -39,6 +41,13 @@ const Header = ({
                     style={theme=== 'light'?styles.middleTextLight:styles.middleTextDark }
                 >{middleText}</Text>
             </View> : null}
+
+           {tick? <TouchableOpacity
+            onPress={onTickPress}
+            >
+                <Image style={ theme === 'light' ? styles.arrowLight : styles.arrowDark} source={tick}/>
+
+            </TouchableOpacity>: null}
 
             {showHeaderRightLogo ? <View style={{ ...styles.iconContainer, ...iconContainer }}>
                 <TouchableOpacity
@@ -127,14 +136,14 @@ const styles = StyleSheet.create({
         fontSize: textScale(20),
         fontWeight: 'bold',
         textAlign: 'center',
-        marginRight: moderateScaleVertical(20)
+       
     },
     middleTextLight: {
         color: colors.black,
         fontSize: textScale(20),
         fontWeight: 'bold',
         textAlign: 'center',
-        marginRight: moderateScaleVertical(20)
+        
     }
 });
 

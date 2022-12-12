@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         borderBottomColor: colors.blackOpacity15,
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: moderateScaleVertical(20),
+        // marginTop: moderateScaleVertical(20),
         backgroundColor:colors.black
     },
     languageContainerLight: {

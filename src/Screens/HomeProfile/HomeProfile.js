@@ -13,13 +13,20 @@ const HomeProfile = ({navigation, routes}) => {
     const theme = useSelector(state=>state.themeReducer.mode)
     return (
         <View style={theme=== 'light'? styles.containerLight:styles.containerDark}>
-            <CommonComponent
+          <View style={{marginTop:moderateScaleVertical(20)}}>
+          <CommonComponent
             text={"Change Language"}
             arrow={">"}
             onPress={()=>{
                 navigation.navigate(navigationStrings.CHANGELANGUAGE)
-            }}
+            }} 
             />
+            <CommonComponent 
+            text={"LogOut"}
+            />
+          </View>
+     
+            
             
         </View>
     );
@@ -29,7 +36,7 @@ const HomeProfile = ({navigation, routes}) => {
 const styles = StyleSheet.create({
     containerDark: {
         flex: 1,
-        backgroundColor:colors.black
+        backgroundColor:colors.black,
     },
     containerLight: {
         flex: 1,

@@ -6,5 +6,7 @@ export default {
     HOME_NOTIFICATION:"HomeNotification",
     HOME_PROFILE: "HomeProfile",
     CHANGELANGUAGE:"ChangeLanguage",
-    POSTSCREEN: "PostScreen"
+    POSTSCREEN: "PostScreen",
+    LOGIN:'Login',
+    SPLASH:'Splash'
 }

@@ -20,6 +20,8 @@ const PostScreen = ({navigation,route}) => {
                 navigation.navigate(navigationStrings.HOME)
                 console.log("onpressBackAroww called")
             }}
+            tick={imagePath.icTick}
+            onTickPress
             />
             <FormikPostUploader/>
         </View>

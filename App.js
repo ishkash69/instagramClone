@@ -1,7 +1,7 @@
 //import liraries
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { Appearance, SafeAreaView, StyleSheet } from 'react-native';
+import { Appearance, SafeAreaView, StyleSheet, useColorScheme } from 'react-native';
 import strings from './src/constants/lang';
 import Routes from './src/Navigation/Routes';
 
@@ -10,11 +10,13 @@ import { store } from './src/redux/store';
 import colors from './src/styles/colors';
 import { notificationListener, requestUserPermission } from './src/utils/NotificationService';
 import { themeAction } from './src/redux/actions/themeAction';
+import { getUser, storetheme } from './src/utils/utils';
+import { userLogin } from './src/redux/actions/authAction';
 
-// create a component
 const App = () => {
   useEffect(() => {
     gettheme();
+    getUser();
     getLang();
     requestUserPermission()
     notificationListener()
@@ -34,7 +36,7 @@ const App = () => {
   const gettheme = async () => {
     try {
       let theme = await AsyncStorage.getItem('theme')
-      // setMode(theme)
+      setMode(theme)
       // console.log(theme, "theme mode")
       store.dispatch(themeAction(theme === 'dark' ? "dark" : "light"))
       

@@ -13,7 +13,10 @@ export default{
     reelsIcon: require("../assets/images/reels.png"),
     homeIcon: require("../assets/images/home.png"),
     homeIcon1: require("../assets/images/home2.png"),
-    icBack: require("../assets/images/icBack.png")
+    icBack: require("../assets/images/icBack.png"),
+    icTick:require("../assets/images/check.png"),
+    instaIcon:require("../assets/images/instagram.png"),
+
 
 
 
