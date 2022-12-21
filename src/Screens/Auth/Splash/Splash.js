@@ -13,8 +13,13 @@ const Splash = ({navigation}) => {
     const userData = useSelector(state=> state.userStates.userData)
     console.log(userData,"this is data in the splash screen")
     useEffect(()=>{
-        setTimeout(() => {
-            navigation.navigate(navigationStrings.LOGIN)
+        setTimeout( () => {
+            if(!!userData){
+                console.log("user is not logged in")
+            }else{
+                navigation.navigate(navigationStrings.LOGIN)
+            }
+            
         }, 3000);
     })
 

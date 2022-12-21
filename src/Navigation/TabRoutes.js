@@ -15,8 +15,13 @@ const BottomTab = createBottomTabNavigator();
 
 
 // create a component
-const TabRoutes = (props) => {
+const TabRoutes = (props) => { 
+  
     const theme = useSelector(state=> state.themeReducer.mode)
+    const userData = useSelector(state=>state.userStates.userData)
+    let data = userData.user
+    
+
     return (
         <BottomTab.Navigator
             tabBar={(tabsProps) => (
@@ -148,7 +153,7 @@ const TabRoutes = (props) => {
                     headerShown: false,
                     tabBarIcon: ({ focused }) => {
                         return focused ? (
-                            <Image source={imagePath.user}
+                            <Image source={data?{uri:data?.photo }:imagePath.user}
                                 style={{
                                     borderRadius: 20,
                                     height: moderateScaleVertical(30),
@@ -156,7 +161,8 @@ const TabRoutes = (props) => {
                                 }}
                             />
                         ) :
-                            <Image source={imagePath.user}
+                            <Image 
+                            source={data?{uri:data?.photo }:imagePath.user }
                                 style={{
                                     borderRadius: 20,
                                     height: moderateScaleVertical(30),

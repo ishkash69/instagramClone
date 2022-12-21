@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
+import PostUploader from '../../Components/formikPostUploader';
 import FormikPostUploader from '../../Components/formikPostUploader';
 import Header from '../../Components/Header';
 import imagePath from '../../constants/imagePath';
@@ -23,7 +24,7 @@ const PostScreen = ({navigation,route}) => {
             tick={imagePath.icTick}
             onTickPress
             />
-            <FormikPostUploader/>
+            <PostUploader/>
         </View>
     );
 };

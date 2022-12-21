@@ -6,9 +6,8 @@ export const userLogin = (data)=>{
         payload:data
     }
 }
-export const userLogOut = (data)=>{
+export const userLogOut = ()=>{
     return{
         type:types.USER_LOGOUT,
-        payload:data
     }
 }

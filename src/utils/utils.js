@@ -22,7 +22,7 @@ export const storeUser = async (value)=>{
   try {
     const userData = JSON.stringify(value)
     await AsyncStorage.setItem("userData",userData)
-    console.log("user data in utils",userData)
+    // console.log("user data in utils",userData)
   } catch (error) {
     console.log(error,'error raised in the utils')
   }
@@ -32,10 +32,20 @@ export const getUser = async ()=>{
   try {
     const savedItem = await AsyncStorage.getItem("userData")
     let parsedValue = JSON.parse(savedItem)
-    console.log(parsedValue,'this is saved user data')
+    // console.log(parsedValue,'this is saved user data')
     store.dispatch(userLogin(parsedValue))
   } catch (error) {
     console.log(error)  
   }
+}
+
+export const clearUserData = async()=>{
+  try {
+    await AsyncStorage.removeItem('userData');
+    console.log("remove login");
+
+} catch (error) {
+    console.log("error", error);
+}
 }
 

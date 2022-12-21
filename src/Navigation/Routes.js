@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 const Routes = () => {
 
     const userData = useSelector(state=> state.userStates.userData)
-    console.log(userData,"in the auth stack")
+    // console.log(userData,"in the route stack")
     return (
         <NavigationContainer ref={(ref) => NavigationService.setTopLevelNavigator(ref)}>
             {!!userData ?

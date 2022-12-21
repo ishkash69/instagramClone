@@ -30,7 +30,7 @@ const App = () => {
   } 
   }, [])
   const[mode,setMode]=useState()
-  console.log(mode,'mode in the app.js')
+  // console.log(mode,'mode in the app.js')
 
 
   const gettheme = async () => {

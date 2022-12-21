@@ -1,5 +1,5 @@
 import types from "../types";
-import { storeUser } from "../../utils/utils";
+import { storeUser,clearUserData } from "../../utils/utils";
 const initialState = {
     userData:[]
 }
@@ -8,10 +8,17 @@ const initialState = {
         case types.USER_LOGIN:{
             const data = action.payload
             storeUser(data)
-            console.log(data,"this is action payload in userStates")
+            // console.log(data,"this is action payload in userStates")
             return{
                 ...state,userData:data
             }
+        }
+        case types.USER_LOGOUT:{
+            clearUserData();
+            return{
+                userData: null
+            }
+
         }
         default:return {...state}
     }
