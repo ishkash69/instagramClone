@@ -40,6 +40,7 @@ const HomeProfile = ({ navigation, routes }) => {
                     onPress={()=>{
                         googleSignOut()
                     }}
+                    languageContainer={{marginTop:moderateScaleVertical(0)}}
                 />
             </View>
             {loader ? <ActivityIndicator size={'large'} /> : null}

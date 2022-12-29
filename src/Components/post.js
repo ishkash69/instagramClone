@@ -14,6 +14,7 @@ const Post = ({
     onDelete = ()=>{}
 }) => {
     const user = useSelector(data => data.userStates.userData)
+    console.log(user, 'this is user in the post')
 
     const theme = useSelector(state => state.themeReducer.mode)
     return (
@@ -63,7 +64,11 @@ const PostHeader = ({ post , onDelete = ()=>{} }) => {
                             onSelect={()=>{onDelete(post.id)}}
                             // onSelect={() => { deletePosts(post.id) }} 
                             
-                            text='Delete post' />
+                            text='Delete post'
+                            customStyles={{
+                                optionText:{color: theme === 'light'? colors.black:colors.white}
+                            }}
+                            />
                     </MenuOptions> : null}
                 </Menu>
 
