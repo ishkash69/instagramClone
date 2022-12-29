@@ -37,7 +37,9 @@ const HomeProfile = ({ navigation, routes }) => {
                 />
                 <CommonComponent
                     text={"LogOut"}
-                    onPress={googleSignOut}
+                    onPress={()=>{
+                        googleSignOut()
+                    }}
                 />
             </View>
             {loader ? <ActivityIndicator size={'large'} /> : null}

@@ -13,6 +13,9 @@ import colors from '../../styles/colors';
 import { store } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import { themeAction } from '../../redux/actions/themeAction';
+
+import firestore from '@react-native-firebase/firestore';
+import tables from '../../constants/tables';
 // create a component
 const Home = ({navigation,route}) => {
     
@@ -21,6 +24,8 @@ const Home = ({navigation,route}) => {
     const [mode, setMode] = useState(theme)
     // console.log(mode,"mode")
 
+    const [posts, setPosts] = useState(null);
+    const [loading, setLoading] = useState(true)
 
     useEffect(()=>{
     const listener = Appearance.addChangeListener(colorTheme=>{
@@ -32,6 +37,45 @@ const Home = ({navigation,route}) => {
         listener;
     }
     },[])
+
+    useEffect(()=>{
+        const fetchPosts = async()=>{
+            try{
+                const list = [];
+                await firestore().collection(tables.POSTS)
+                .orderBy('postTime','desc')
+                .get()
+                .then((querySnapshot)=>{
+                    // console.log('querySnapshot',querySnapshot.size)
+                    querySnapshot.forEach(doc =>{
+                        const {post, postImg, likes, comments, userId,postTime,userName,userImg} = doc.data();
+                        list.push({
+                            id : doc.id,
+                            userId,
+                            userName,
+                            userImg,
+                            post : post,
+                            postImg: postImg,
+                            liked : false,
+                            likes,
+                            comments,
+                            postTime,
+                        })
+                    })
+                    setPosts(list)
+                    if(loading){
+                        setLoading(false)
+                    }
+                    console.log("Posts: ", list)
+                })
+            } catch(error){
+                console.log(error,'error raised in fetching posts')
+            }
+        }
+        fetchPosts();
+        
+    },[])
+    
 
     return (
         <View style={mode== 'light'? styles.containerLight:styles.containerDark}>
@@ -47,10 +91,10 @@ const Home = ({navigation,route}) => {
             />
             <Stories />
             <FlatList
-            data={POSTS}
+            data={posts}
             renderItem={({item,index})=>{
                 return(
-                    <Post post={item} key={index} />
+                    <Post post={item} key={index}/>
                 )
             }}
             />

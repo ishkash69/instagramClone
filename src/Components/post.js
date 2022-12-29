@@ -1,16 +1,24 @@
 //import liraries
+import { FirebaseStorageTypes } from '@react-native-firebase/storage';
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Menu, MenuOption, MenuOptions, MenuProvider, MenuTrigger } from 'react-native-popup-menu';
 import { useSelector } from 'react-redux';
 import imagePath from '../constants/imagePath';
 import strings from '../constants/lang';
 import colors from '../styles/colors';
 import { moderateScale, moderateScaleVertical, textScale } from '../styles/responsiveSize';
+import firestore from "@react-native-firebase/firestore"
+import storage from "@react-native-firebase/storage"
+import tables from '../constants/tables';
 // create a component
+
 const Post = ({
     post,
 
 }) => {
+    const user = useSelector(data => data.userStates.userData)
+
     const theme = useSelector(state => state.themeReducer.mode)
     return (
         <View style={styles.container}>
@@ -21,8 +29,8 @@ const Post = ({
                 <PostFootterIcons post={post} />
                 <Likes post={post} />
                 <Caption post={post} />
-                <CommentsSection post={post} />
-                <Comments post={post} />
+                {/* <CommentsSection post={post} /> */}
+                {/* <Comments post={post} /> */}
             </View>
 
         </View>
@@ -31,20 +39,75 @@ const Post = ({
 // post header
 const PostHeader = ({ post }) => {
     const theme = useSelector(state => state.themeReducer.mode)
+    const user = useSelector(data => data.userStates.userData)
+    const deletePosts = (postId) => {
+        // console.log(postId,'post id')
+        firestore()
+            .collection(tables.POSTS)
+            .doc(postId)
+            .get()
+            .then((documentSnapshot) => {
+                if (documentSnapshot.exists) {
+                    const { postImg } = documentSnapshot.data();
+                    if (!!postImg) {
+                        const storageRef = storage().refFromURL(postImg);
+                        const imageRef = storage().ref(storageRef.fullPath);
+
+                        imageRef
+                            .delete()
+                            .then(() => {
+                                console.log(`${postImg} has been deleted successfully`)
+                                deleteFirestoreData(postId)
+                            })
+                            .catch((error) => {
+                                console.log(error, "error raised...")
+                            })
+                    }
+                }
+            })
+        }
+        const deleteFirestoreData = (postId) =>{
+            firestore()
+            .collection(tables.POSTS)
+            .doc(postId)
+            .delete()
+            .then(()=>{
+                console.log('post has been deleted ')
+            })
+            .catch((e)=>{
+                console.log(e,' error raied in deleting the post')
+            })
+        }
+
     return (
         <TouchableOpacity activeOpacity={1} style={styles.postHeader}>
             <View style={styles.profileAndUserNameContainer}>
                 <TouchableOpacity>
-                    <Image style={styles.profileImage} source={post.profile_picture} />
+                    <Image style={styles.profileImage} source={{ uri: post.userImg }} />
                 </TouchableOpacity>
 
                 <Text>   </Text>
                 <TouchableOpacity activeOpacity={1}>
-                    <Text style={theme === 'light' ? styles.userNameLight : styles.userNameDark}>{post.user}</Text>
+                    <Text style={theme === 'light' ? styles.userNameLight : styles.userNameDark}>{post.userName}</Text>
                 </TouchableOpacity>
             </View>
+            <MenuProvider
+                style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
 
-            <TouchableOpacity activeOpacity={1}
+                <Menu>
+                    <MenuTrigger text='...'
+                        customStyles={{
+                            triggerText: { color: colors.white, transform: [{ rotate: '90deg' }], fontWeight: '900' },
+                            triggerWrapper: { left: -1 }
+                        }}
+                    />
+                    {user.user.id == post.userId ? <MenuOptions>
+                        <MenuOption onSelect={() => { deletePosts(post.id) }} text='Delete post' />
+                    </MenuOptions> : null}
+                </Menu>
+
+            </MenuProvider>
+            {/* <TouchableOpacity activeOpacity={1}
                 style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Text
                     style={{
@@ -54,7 +117,7 @@ const PostHeader = ({ post }) => {
                             [{ rotate: '90deg' }],
                         color: colors.white
                     }}>...</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </TouchableOpacity>
     )
 }
@@ -63,7 +126,7 @@ const PostImage = ({ post }) => {
     return (
         <View style={{ height: moderateScaleVertical(450), width: "100%", marginTop: moderateScaleVertical(8) }}>
             <Image style={{ height: "100%", width: "100%", resizeMode: "cover" }}
-                source={post.imageUrl} />
+                source={{ uri: post.postImg }} />
         </View>
     )
 }
@@ -143,28 +206,28 @@ const PostFootterIcons = ({
     )
 }
 const Likes = ({ post }) => {
-    const theme = useSelector(state=>state.themeReducer.mode)
+    const theme = useSelector(state => state.themeReducer.mode)
     return (
         <View style={{
             alignItems: 'center',
             flexDirection: 'row',
         }}>
             <Text
-                style={theme==='light'?styles.likeLight:styles.likeDark}>
-                {post.likes.toLocaleString("en")} {strings.LIKES}
+                style={theme === 'light' ? styles.likeLight : styles.likeDark}>
+                {post.likes} {strings.LIKES}
             </Text>
         </View>
     )
 }
 
 const Caption = ({ post }) => {
-    const theme = useSelector(state=>state.themeReducer.mode)
+    const theme = useSelector(state => state.themeReducer.mode)
     return (
         <View style={{ flexDirection: 'row', marginTop: moderateScaleVertical(4) }}>
             <TouchableOpacity activeOpacity={1}>
-                <Text style={theme==='light'? styles.captionLight:styles.captionDark}>
-                    <Text style={{ fontWeight: "700", fontSize: textScale(16) }}>{post.user}{"  "}</Text>
-                    {post.caption}
+                <Text style={theme === 'light' ? styles.captionLight : styles.captionDark}>
+                    <Text style={{ fontWeight: "700", fontSize: textScale(16) }}>{post.userName}{"  "}</Text>
+                    {post.post}
                 </Text>
             </TouchableOpacity>
         </View>
@@ -187,13 +250,13 @@ const CommentsSection = ({ post }) => {
 }
 
 const Comments = ({ post }) => {
-    const theme = useSelector(state=>state.themeReducer.mode)
+    const theme = useSelector(state => state.themeReducer.mode)
     return (
         <>
             {post.comments.map((comment, index) => (
                 <View key={index} style={{ flexDirection: 'row', marginTop: moderateScaleVertical(4) }}>
                     <TouchableOpacity activeOpacity={1}>
-                        <Text style={theme==='light'? styles.captionLight:styles.captionDark}>
+                        <Text style={theme === 'light' ? styles.captionLight : styles.captionDark}>
                             <Text style={{ fontWeight: "600" }}>{comment.user}{"  "}</Text>
                             {comment.comment}
                         </Text>
@@ -259,11 +322,11 @@ const styles = StyleSheet.create({
         fontSize: textScale(14),
         fontWeight: "700"
     },
-    captionDark:{
-        color: colors.white 
+    captionDark: {
+        color: colors.white
     },
-    captionLight:{
-        color: colors.black 
+    captionLight: {
+        color: colors.black
     }
 
 });

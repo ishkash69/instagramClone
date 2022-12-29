@@ -49,7 +49,7 @@ const App = () => {
   const getLang = async () => {
     try {
       let value = await AsyncStorage.getItem('language');
-      // console.log(value, "language")
+      console.log(value, "language")
       if (!!value) {
         strings.setLanguage(value)
       } else {

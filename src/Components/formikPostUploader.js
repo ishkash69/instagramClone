@@ -1,22 +1,30 @@
 //import liraries
-import React, { Component, createContext, useState } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Button } from 'react-native';
+import React, { Component, createContext, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Button, Alert, ActivityIndicator } from 'react-native';
 import colors from '../styles/colors';
-import * as Yup from 'yup'
-import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import { moderateScale, moderateScaleVertical, textScale } from '../styles/responsiveSize';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Modal from 'react-native-modal';
 import fontFamily from '../styles/fontFamily';
 import imagePath from '../constants/imagePath';
+
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
+import tables from '../constants/tables';
+import navigationStrings from '../constants/navigationStrings';
 // create a component
 
-const PostUploader = ({
+const PostUploader = ({navigation,route
 }) => {
     const theme = useSelector(state => state.themeReducer.mode)
     const [thumbnail, setThumbnail] = useState()
     const [isModalVisible, setIsModalVisible] = useState(false)
+    const [result, setResult] = useState()
+    const [uploading, setUploading] = useState(false)
+    const [transferred, setTransferred] = useState(0)
+    const [post, setPost] = useState(null)
+    const userData = useSelector(data => data.userStates.userData)
 
     const openGallery = async () => {
         const options = {
@@ -27,11 +35,12 @@ const PostUploader = ({
             includeBase64: true
         }
         const result = await launchImageLibrary(options)
-        console.log(result)
+        // console.log(result)
+        setResult(result)
         setIsModalVisible(false)
-        const source = { uri: "data:image/jpeg;base64," + result.assets[0].base64 }
+        const source = { uri: result.assets[0].uri }
         setThumbnail(source)
-        console.log(source)
+        // console.log(source)
     }
     const openCamera = async () => {
         const options = {
@@ -44,12 +53,69 @@ const PostUploader = ({
         const result = await launchCamera(options)
         console.log(result)
         setIsModalVisible(false)
-        const source = { uri: "data:image/jpeg;base64," + result }
+        const source = { uri: result.assets[0].base64 }
         setThumbnail(source)
         console.log(source)
     }
     const openModal = () => {
         setIsModalVisible(true)
+    }
+
+    const uploadImage = async () => {
+        let fileName = result.assets[0].fileName
+        setUploading(true)
+        setTransferred(0)
+
+        const storageRef = storage().ref(`photos/${fileName}`)
+        const task = storageRef.putFile(result.assets[0].uri)
+        task.on('state_changed', taskSnapshot => {
+            console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
+            setTransferred(
+                Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100)
+            )
+        });
+
+        try {
+            await task
+            const url = await storageRef.getDownloadURL();
+            console.log(url, 'this is image url===>>>>')
+            setUploading(false)
+            return url
+        } catch (error) {
+            console.log('error raised in uploadingFile', error)
+            return null
+        }
+
+    }
+    const submitPost = async () => {
+        const imageUrl = await uploadImage();
+        console.log("imageUrl ==", imageUrl)
+        const postObj = {
+            userId: userData.user.id,
+            userImg: userData.user.photo,
+            userName: userData.user.name,
+            post: post,
+            postImg: imageUrl,
+            postTime: firestore.Timestamp.fromDate(new Date()),
+            likes: null,
+            comments: null
+        }
+        firestore().collection(tables.POSTS)
+            .add(postObj)
+            .then(() => {
+                console.log('post added')
+                Alert.alert(
+                    "Post uploaded!",
+                    'Your Post has been uploaded to Firebase Cloud Storage successfully',
+                )
+                
+
+                setThumbnail(null),
+                    setPost(null)
+            })
+            .catch((error) => {
+                console.log(error, 'error raised in uploading post to firestore')
+            })
     }
 
     return (
@@ -68,7 +134,6 @@ const PostUploader = ({
                     onPress={openModal}
                 >
                     <Image
-
                         style={{
                             height: moderateScaleVertical(100),
                             width: moderateScale(100),
@@ -84,14 +149,20 @@ const PostUploader = ({
                         fontSize: textScale(18),
                         width: "72%"
                     }}
+                    value={post}
+                    onChangeText={(content) => setPost(content)}
                     placeholder='Write a Caption....'
                     placeholderTextColor={colors.gray}
                     multiline={true}
                 />
             </View>
-            <Button
-                title='Share'
-            />
+
+
+            {uploading ? <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: moderateScaleVertical(20) }}>
+                <Text style={{ color: theme === 'light' ? colors.black : colors.white, fontSize: textScale(24) }}>{transferred}% Completed</Text>
+                <ActivityIndicator size={"large"} color={colors.red} />
+            </View> : <Button disabled={!thumbnail} title='share' onPress={submitPost} />}
+
 
 
 

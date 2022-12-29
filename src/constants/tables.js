@@ -1,3 +1,4 @@
 export default{
-    USERS:"Users"
+    USERS:"Users",
+    POSTS:"Posts"
 }
