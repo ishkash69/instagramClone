@@ -5,7 +5,7 @@ import { store } from "../redux/store";
 export const storeLang = async (value) => {
   try {
     await AsyncStorage.setItem("language", value);
-    // console.log(value, "value in utils +++language")
+    console.log(value, "value in utils +++language")
   } catch (error) {
     console.log(error, 'error')
   }

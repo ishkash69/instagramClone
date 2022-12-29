@@ -13,6 +13,7 @@ import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import tables from '../constants/tables';
 import navigationStrings from '../constants/navigationStrings';
+import strings from '../constants/lang';
 // create a component
 
 const PostUploader = ({navigation,route
@@ -151,7 +152,7 @@ const PostUploader = ({navigation,route
                     }}
                     value={post}
                     onChangeText={(content) => setPost(content)}
-                    placeholder='Write a Caption....'
+                    placeholder={strings.WRITE_CAPTION}
                     placeholderTextColor={colors.gray}
                     multiline={true}
                 />
@@ -161,7 +162,7 @@ const PostUploader = ({navigation,route
             {uploading ? <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: moderateScaleVertical(20) }}>
                 <Text style={{ color: theme === 'light' ? colors.black : colors.white, fontSize: textScale(24) }}>{transferred}% Completed</Text>
                 <ActivityIndicator size={"large"} color={colors.red} />
-            </View> : <Button disabled={!thumbnail} title='share' onPress={submitPost} />}
+            </View> : <Button disabled={!thumbnail} title={strings.SHARE} onPress={submitPost} />}
 
 
 

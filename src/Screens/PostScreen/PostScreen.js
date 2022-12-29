@@ -6,6 +6,7 @@ import PostUploader from '../../Components/formikPostUploader';
 import FormikPostUploader from '../../Components/formikPostUploader';
 import Header from '../../Components/Header';
 import imagePath from '../../constants/imagePath';
+import strings from '../../constants/lang';
 import navigationStrings from '../../constants/navigationStrings';
 import { styles } from './style';
 
@@ -16,7 +17,7 @@ const PostScreen = ({navigation,route}) => {
         <View style={theme==='light'? styles.containerlight:styles.containerDark}>
             <Header
             leftArrow={imagePath.icBack}
-            middleText={"Add post"}
+            middleText={strings.ADD_POST}
             onPressBackArrow={()=>{
                 navigation.navigate(navigationStrings.HOME)
                 console.log("onpressBackAroww called")

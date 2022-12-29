@@ -1,6 +1,5 @@
 //import liraries
-import { FirebaseStorageTypes } from '@react-native-firebase/storage';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuProvider, MenuTrigger } from 'react-native-popup-menu';
 import { useSelector } from 'react-redux';
@@ -8,22 +7,18 @@ import imagePath from '../constants/imagePath';
 import strings from '../constants/lang';
 import colors from '../styles/colors';
 import { moderateScale, moderateScaleVertical, textScale } from '../styles/responsiveSize';
-import firestore from "@react-native-firebase/firestore"
-import storage from "@react-native-firebase/storage"
-import tables from '../constants/tables';
 // create a component
 
 const Post = ({
     post,
-
+    onDelete = ()=>{}
 }) => {
     const user = useSelector(data => data.userStates.userData)
 
     const theme = useSelector(state => state.themeReducer.mode)
     return (
         <View style={styles.container}>
-            {/* <Divider width={1} orientation="vertical" /> */}
-            <PostHeader post={post} />
+            <PostHeader post={post} onDelete = {onDelete} />
             <PostImage post={post} />
             <View style={{ marginHorizontal: moderateScale(8) }}>
                 <PostFootterIcons post={post} />
@@ -37,48 +32,10 @@ const Post = ({
     );
 };
 // post header
-const PostHeader = ({ post }) => {
+const PostHeader = ({ post , onDelete = ()=>{} }) => {
     const theme = useSelector(state => state.themeReducer.mode)
     const user = useSelector(data => data.userStates.userData)
-    const deletePosts = (postId) => {
-        // console.log(postId,'post id')
-        firestore()
-            .collection(tables.POSTS)
-            .doc(postId)
-            .get()
-            .then((documentSnapshot) => {
-                if (documentSnapshot.exists) {
-                    const { postImg } = documentSnapshot.data();
-                    if (!!postImg) {
-                        const storageRef = storage().refFromURL(postImg);
-                        const imageRef = storage().ref(storageRef.fullPath);
-
-                        imageRef
-                            .delete()
-                            .then(() => {
-                                console.log(`${postImg} has been deleted successfully`)
-                                deleteFirestoreData(postId)
-                            })
-                            .catch((error) => {
-                                console.log(error, "error raised...")
-                            })
-                    }
-                }
-            })
-        }
-        const deleteFirestoreData = (postId) =>{
-            firestore()
-            .collection(tables.POSTS)
-            .doc(postId)
-            .delete()
-            .then(()=>{
-                console.log('post has been deleted ')
-            })
-            .catch((e)=>{
-                console.log(e,' error raied in deleting the post')
-            })
-        }
-
+    
     return (
         <TouchableOpacity activeOpacity={1} style={styles.postHeader}>
             <View style={styles.profileAndUserNameContainer}>
@@ -91,18 +48,22 @@ const PostHeader = ({ post }) => {
                     <Text style={theme === 'light' ? styles.userNameLight : styles.userNameDark}>{post.userName}</Text>
                 </TouchableOpacity>
             </View>
-            <MenuProvider
+            <MenuProvider 
                 style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
 
-                <Menu>
+                <Menu >
                     <MenuTrigger text='...'
                         customStyles={{
-                            triggerText: { color: colors.white, transform: [{ rotate: '90deg' }], fontWeight: '900' },
+                            triggerText: { color: theme=== 'light'? colors.black:colors.white, transform: [{ rotate: '90deg' }], fontWeight: '900' },
                             triggerWrapper: { left: -1 }
                         }}
                     />
                     {user.user.id == post.userId ? <MenuOptions>
-                        <MenuOption onSelect={() => { deletePosts(post.id) }} text='Delete post' />
+                        <MenuOption 
+                            onSelect={()=>{onDelete(post.id)}}
+                            // onSelect={() => { deletePosts(post.id) }} 
+                            
+                            text='Delete post' />
                     </MenuOptions> : null}
                 </Menu>
 
@@ -214,7 +175,7 @@ const Likes = ({ post }) => {
         }}>
             <Text
                 style={theme === 'light' ? styles.likeLight : styles.likeDark}>
-                {post.likes} {strings.LIKES}
+                {post.likes} {strings.LIKES} 
             </Text>
         </View>
     )

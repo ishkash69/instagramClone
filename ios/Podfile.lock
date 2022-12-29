@@ -976,7 +976,7 @@ PODS:
   - React-jsinspector (0.70.6)
   - React-logger (0.70.6):
     - glog
-  - react-native-image-picker (4.10.2):
+  - react-native-image-picker (4.10.3):
     - React-Core
   - react-native-restart (0.0.24):
     - React-Core
@@ -1079,13 +1079,13 @@ PODS:
     - RNFBApp
   - RNGestureHandler (2.8.0):
     - React-Core
-  - RNGoogleSignin (9.0.0):
+  - RNGoogleSignin (9.0.2):
     - GoogleSignIn (~> 6.2)
     - React-Core
-  - RNNotifee (7.2.0):
+  - RNNotifee (7.3.0):
     - React-Core
-    - RNNotifee/NotifeeCore (= 7.2.0)
-  - RNNotifee/NotifeeCore (7.2.0):
+    - RNNotifee/NotifeeCore (= 7.3.0)
+  - RNNotifee/NotifeeCore (7.3.0):
     - React-Core
   - RNReanimated (2.13.0):
     - DoubleConversion
@@ -1341,7 +1341,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b4a65947391c658450151275aa406f2b8263178f
   React-jsinspector: 60769e5a0a6d4b32294a2456077f59d0266f9a8b
   React-logger: 1623c216abaa88974afce404dc8f479406bbc3a0
-  react-native-image-picker: bf34f3f516d139ed3e24c5f5a381a91819e349ea
+  react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   React-perflogger: 8c79399b0500a30ee8152d0f9f11beae7fc36595
@@ -1365,8 +1365,8 @@ SPEC CHECKSUMS:
   RNFBMessaging: c88867b6c9d16d3ba349c7ab4a1a8948fb71e2f6
   RNFBStorage: cce752c3adefd5a9a7e9df3b87ec5b8d32fc5c01
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
-  RNGoogleSignin: f9cb4c904c63dae74dc850aaabcf3fbdc9d16218
-  RNNotifee: 70639b9ffa4d40f43c5cd3da9159436222a9e51e
+  RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
+  RNNotifee: d585266dd69e1f355d26d074cbfdbdfa6c94b7d5
   RNReanimated: ce445c233a6ff5600223484a88ad5704945d972a
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc

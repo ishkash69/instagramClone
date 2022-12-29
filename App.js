@@ -31,7 +31,9 @@ const App = () => {
   }, [])
   const[mode,setMode]=useState()
   // console.log(mode,'mode in the app.js')
-
+useEffect(()=>{
+  getLang();
+})
 
   const gettheme = async () => {
     try {

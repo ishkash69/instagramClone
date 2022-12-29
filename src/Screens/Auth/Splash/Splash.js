@@ -20,7 +20,7 @@ const Splash = ({navigation}) => {
                 navigation.navigate(navigationStrings.LOGIN)
             }
             
-        }, 3000);
+        }, 5000);
     })
 
     return (
