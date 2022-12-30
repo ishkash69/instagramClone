@@ -1,4 +1,5 @@
 //import liraries
+import { FirebaseStorageTypes } from '@react-native-firebase/storage';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuProvider, MenuTrigger } from 'react-native-popup-menu';
@@ -7,19 +8,22 @@ import imagePath from '../constants/imagePath';
 import strings from '../constants/lang';
 import colors from '../styles/colors';
 import { moderateScale, moderateScaleVertical, textScale } from '../styles/responsiveSize';
+import firestore from "@react-native-firebase/firestore"
+import tables from '../constants/tables';
 // create a component
 
 const Post = ({
     post,
-    onDelete = ()=>{}
+    onDelete = () => { },
+    // onLike = () =>{}
 }) => {
     const user = useSelector(data => data.userStates.userData)
-    console.log(user, 'this is user in the post')
+    // console.log(user, 'this is user in the post')
 
     const theme = useSelector(state => state.themeReducer.mode)
     return (
         <View style={styles.container}>
-            <PostHeader post={post} onDelete = {onDelete} />
+            <PostHeader post={post} onDelete={onDelete} />
             <PostImage post={post} />
             <View style={{ marginHorizontal: moderateScale(8) }}>
                 <PostFootterIcons post={post} />
@@ -33,10 +37,9 @@ const Post = ({
     );
 };
 // post header
-const PostHeader = ({ post , onDelete = ()=>{} }) => {
+const PostHeader = ({ post, onDelete = () => { } }) => {
     const theme = useSelector(state => state.themeReducer.mode)
     const user = useSelector(data => data.userStates.userData)
-    
     return (
         <TouchableOpacity activeOpacity={1} style={styles.postHeader}>
             <View style={styles.profileAndUserNameContainer}>
@@ -49,26 +52,28 @@ const PostHeader = ({ post , onDelete = ()=>{} }) => {
                     <Text style={theme === 'light' ? styles.userNameLight : styles.userNameDark}>{post.userName}</Text>
                 </TouchableOpacity>
             </View>
-            <MenuProvider 
-                style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <MenuProvider
+                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', zIndex: 999 }}>
+
 
                 <Menu >
                     <MenuTrigger text='...'
                         customStyles={{
-                            triggerText: { color: theme=== 'light'? colors.black:colors.white, transform: [{ rotate: '90deg' }], fontWeight: '900' },
-                            triggerWrapper: { left: -1 }
+                            triggerText: { color: theme === 'light' ? colors.black : colors.white, transform: [{ rotate: '90deg' }], fontWeight: '900' },
+                            triggerWrapper: { left: -1 },
+
                         }}
                     />
                     {user.user.id == post.userId ? <MenuOptions>
-                        <MenuOption 
-                            onSelect={()=>{onDelete(post.id)}}
+                        <MenuOption
+                            onSelect={() => { onDelete(post.id) }}
                             // onSelect={() => { deletePosts(post.id) }} 
-                            
+
                             text='Delete post'
                             customStyles={{
-                                optionText:{color: theme === 'light'? colors.black:colors.white}
+                                optionText: { color: theme === 'light' ? colors.black : colors.black }
                             }}
-                            />
+                        />
                     </MenuOptions> : null}
                 </Menu>
 
@@ -91,7 +96,7 @@ const PostHeader = ({ post , onDelete = ()=>{} }) => {
 const PostImage = ({ post }) => {
     return (
         <View style={{ height: moderateScaleVertical(450), width: "100%", marginTop: moderateScaleVertical(8) }}>
-            <Image style={{ height: "100%", width: "100%", resizeMode: "cover" }}
+            <Image style={{ height: "100%", width: "100%", resizeMode: "cover", zIndex: 999 }}
                 source={{ uri: post.postImg }} />
         </View>
     )
@@ -101,19 +106,53 @@ const PostImage = ({ post }) => {
 
 const PostFootterIcons = ({
     post,
+    // onLike = ()=>{}
 
 }) => {
     const theme = useSelector(state => state.themeReducer.mode)
 
     const [save, setSave] = useState(!save)
     const [heart, setHeart] = useState(!heart)
+    const [liked,setLiked] =useState(false)
 
     const onSave = (() => {
         setSave(!save)
     })
-    const onLike = () => {
-        setHeart(!heart)
+    const onLike = (postId) => {
+        const postReference = firestore().collection(tables.POSTS).doc(postId)
+        // console.log(postReference,'this is post reference')
+
+        return firestore().runTransaction(async transaction=>{
+            const postSnapshot = await transaction.get(postReference)
+            // console.log(postSnapshot,'this is postSnapshot')
+            if(!postSnapshot.exists){
+                throw 'post does not exists!'
+            }
+            transaction.update(postReference,{
+                likes: postSnapshot.data().likes+1,
+            })
+            setHeart(!heart)
+            setLiked(true)
+        }) 
     }
+    const onDislike = (postId) =>{
+        const postReference = firestore().collection(tables.POSTS).doc(postId)
+        // console.log(postReference,'this is post reference')
+
+        return firestore().runTransaction(async transaction=>{
+            const postSnapshot = await transaction.get(postReference)
+            // console.log(postSnapshot,'this is postSnapshot')
+            if(!postSnapshot.exists){
+                throw 'post does not exists!'
+            }
+            transaction.update(postReference,{
+                likes: postSnapshot.data().likes-1,
+            })
+            setHeart(!heart)
+            setLiked(false)
+        }) 
+    }
+    
     return (
         <View style={{
             alignItems: 'center',
@@ -127,7 +166,9 @@ const PostFootterIcons = ({
                 justifyContent: 'space-evenly'
             }}>
                 <TouchableOpacity
-                    onPress={onLike}
+                    onPress={()=>{
+                        liked?onDislike(post.id): onLike(post.id)
+                    }}
                     activeOpacity={1} >
                     {heart ? <Image
                         style={theme === 'light' ? styles.footterIconsLight : styles.footterIconsDark}
@@ -172,7 +213,29 @@ const PostFootterIcons = ({
     )
 }
 const Likes = ({ post }) => {
+    // console.log(post.likes,'post likes')
     const theme = useSelector(state => state.themeReducer.mode)
+    const [likes, setLikes] = useState(null)
+    const [liked, setLiked] = useState(false)
+
+    useEffect(()=>{
+        onLikes()
+    },[])
+    // useEffect(()=>{
+    //     onLikes()
+    // },[liked])
+    const onLikes = ()=>{
+        firestore()
+        .collection(tables.POSTS)
+        .doc(post.id)
+        .get()
+        .then((postSnapshot)=>{
+            // console.log(postSnapshot.data(),'postSnapshot data+++++++')
+            setLikes(postSnapshot.data().likes)
+            
+        })
+    }
+
     return (
         <View style={{
             alignItems: 'center',
@@ -180,7 +243,7 @@ const Likes = ({ post }) => {
         }}>
             <Text
                 style={theme === 'light' ? styles.likeLight : styles.likeDark}>
-                {post.likes} {strings.LIKES} 
+                {likes} {strings.LIKES}
             </Text>
         </View>
     )

@@ -3,6 +3,7 @@ import { BottomTabBar } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import PostUploader from '../Components/formikPostUploader';
 import navigationStrings from '../constants/navigationStrings';
 
 import * as Screens from "../Screens"
@@ -20,6 +21,11 @@ const HomeStack = () => {
             <Stack.Screen 
             name={navigationStrings.POSTSCREEN}
             component={Screens.PostScreen}
+            options={{headerShown: false}}
+            />
+            <Stack.Screen 
+            name='formikPostUploader'
+            component={PostUploader}
             options={{headerShown: false}}
             />
         </Stack.Navigator>

@@ -21,7 +21,7 @@ import tables from '../../constants/tables';
 const Home = ({ navigation, route }) => {
 
     const theme = useSelector(state => state.themeReducer.mode)
-    // console.log(theme,"theme")
+    console.log(theme,"theme")
     // const [mode, setMode] = useState(theme)
     // console.log(mode,"mode")
 
@@ -29,6 +29,7 @@ const Home = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true)
 
     const [deleted, setDeleted] = useState(false)
+
 
 
     // useEffect(() => {
@@ -80,7 +81,7 @@ const Home = ({ navigation, route }) => {
                     if (loading) {
                         setLoading(false)
                     }
-                    console.log("Posts: ", list)
+                    // console.log("Posts: ", list)
                 })
         } catch (error) {
             console.log(error, 'error raised in fetching posts')
@@ -147,7 +148,9 @@ const Home = ({ navigation, route }) => {
                     return (
                         <Post post={item} key={index} onDelete={() => {
                             deletePosts(item.id)
-                        }} />
+                        }}
+                        
+                        />
                     )
                 }}
             />

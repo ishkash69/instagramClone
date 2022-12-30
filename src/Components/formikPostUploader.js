@@ -16,7 +16,7 @@ import navigationStrings from '../constants/navigationStrings';
 import strings from '../constants/lang';
 // create a component
 
-const PostUploader = ({navigation,route
+const PostUploader = ({ navigation, route,
 }) => {
     const theme = useSelector(state => state.themeReducer.mode)
     const [thumbnail, setThumbnail] = useState()
@@ -107,10 +107,8 @@ const PostUploader = ({navigation,route
                 console.log('post added')
                 Alert.alert(
                     "Post uploaded!",
-                    'Your Post has been uploaded to Firebase Cloud Storage successfully',
+                    'Your Post has been uploaded to Firebase successfully',
                 )
-                
-
                 setThumbnail(null),
                     setPost(null)
             })
@@ -163,9 +161,6 @@ const PostUploader = ({navigation,route
                 <Text style={{ color: theme === 'light' ? colors.black : colors.white, fontSize: textScale(24) }}>{transferred}% Completed</Text>
                 <ActivityIndicator size={"large"} color={colors.red} />
             </View> : <Button disabled={!thumbnail} title={strings.SHARE} onPress={submitPost} />}
-
-
-
 
             <Modal isVisible={isModalVisible}
             >
