@@ -1,5 +1,5 @@
 //import liraries
-import { FirebaseStorageTypes } from '@react-native-firebase/storage';
+import { firebase, FirebaseStorageTypes } from '@react-native-firebase/storage';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuProvider, MenuTrigger } from 'react-native-popup-menu';
@@ -53,7 +53,7 @@ const PostHeader = ({ post, onDelete = () => { } }) => {
                 </TouchableOpacity>
             </View>
             <MenuProvider
-                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', zIndex: 999 }}>
+                style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', }}>
 
 
                 <Menu >
@@ -110,30 +110,57 @@ const PostFootterIcons = ({
 
 }) => {
     const theme = useSelector(state => state.themeReducer.mode)
+    const user = useSelector(data => data.userStates.userData)
+    // console.log(user,'useriseiriereir')
 
     const [save, setSave] = useState(!save)
     const [heart, setHeart] = useState(!heart)
-    const [liked,setLiked] =useState(false)
+    const [liked, setLiked] = useState(false)
 
     const onSave = (() => {
         setSave(!save)
     })
     const onLike = (postId) => {
-        const postReference = firestore().collection(tables.POSTS).doc(postId)
-        // console.log(postReference,'this is post reference')
 
-        return firestore().runTransaction(async transaction=>{
-            const postSnapshot = await transaction.get(postReference)
-            // console.log(postSnapshot,'this is postSnapshot')
-            if(!postSnapshot.exists){
-                throw 'post does not exists!'
-            }
-            transaction.update(postReference,{
-                likes: postSnapshot.data().likes+1,
+        const likesObj = {
+            userName: user.user.givenName,
+            userId: user.user.id
+        }
+        firestore()
+            .collection(tables.POSTS)
+            .doc(postId)
+            .get()
+            .then((postSnapshot) => {
+                if (postSnapshot.data()) {
+                    const updateArray = firebase.firestore.FieldValue.arrayUnion(likesObj)
+                    const myObj = {
+                        likes: updateArray
+                    }
+                    firestore()
+                    .collection(tables.POSTS)
+                    .doc(postId)
+                    .update(myObj)
+                    .then(()=>{
+                        incrementLikes(postId)
+                        console.log('likes has been updated')
+                    })
+                }else{
+                    const myObj = {
+                        likes: [likesObj]
+                    }
+                    firestore()
+                    .collection(tables.POSTS)
+                    .doc(postId)
+                    .set(myObj)
+                    .then(()=>{
+                        incrementLikes(postId)
+                        console.log('likes are added')
+                        
+                    })
+                }
             })
-            setHeart(!heart)
-            setLiked(true)
-        }) 
+
+      
     }
     const onDislike = (postId) =>{
         const postReference = firestore().collection(tables.POSTS).doc(postId)
@@ -146,13 +173,32 @@ const PostFootterIcons = ({
                 throw 'post does not exists!'
             }
             transaction.update(postReference,{
-                likes: postSnapshot.data().likes-1,
+                nlikes: postSnapshot.data().nlikes-1,
             })
-            setHeart(!heart)
+
+            setHeart(!heart),
             setLiked(false)
         }) 
     }
-    
+
+    const incrementLikes = (postId) =>{
+  const postReference = firestore().collection(tables.POSTS).doc(postId)
+        // console.log(postReference,'this is post reference')
+
+        return firestore().runTransaction(async transaction=>{
+            const postSnapshot = await transaction.get(postReference)
+            // console.log(postSnapshot.data(),'this is postSnapshot')
+            if(!postSnapshot.exists){
+                throw 'post does not exists!'
+            }
+            transaction.update(postReference,{
+                nlikes: postSnapshot.data().nlikes+1,
+            })
+            setHeart(!heart),
+            setLiked(true)
+        }) 
+    }
+
     return (
         <View style={{
             alignItems: 'center',
@@ -166,8 +212,8 @@ const PostFootterIcons = ({
                 justifyContent: 'space-evenly'
             }}>
                 <TouchableOpacity
-                    onPress={()=>{
-                        liked?onDislike(post.id): onLike(post.id)
+                    onPress={() => {
+                        liked ? onDislike(post.id) : onLike(post.id)
                     }}
                     activeOpacity={1} >
                     {heart ? <Image
@@ -218,23 +264,23 @@ const Likes = ({ post }) => {
     const [likes, setLikes] = useState(null)
     const [liked, setLiked] = useState(false)
 
-    useEffect(()=>{
-        onLikes()
-    },[])
     // useEffect(()=>{
-    //     onLikes()
-    // },[liked])
-    const onLikes = ()=>{
-        firestore()
-        .collection(tables.POSTS)
-        .doc(post.id)
-        .get()
-        .then((postSnapshot)=>{
-            // console.log(postSnapshot.data(),'postSnapshot data+++++++')
-            setLikes(postSnapshot.data().likes)
-            
-        })
-    }
+    //     onLikes(post.id)
+    // },[])
+    // // useEffect(()=>{
+    // //     onLikes()
+    // // },[liked])
+    // const onLikes = (postId)=>{
+    // firestore()
+    // .collection(tables.POSTS)
+    // .doc(post.id)
+    // .get()
+    // .then((postSnapshot)=>{
+    //     // console.log(postSnapshot.data(),'postSnapshot data+++++++')
+    //     setLikes(postSnapshot.data().likes)
+
+    // })
+    // }
 
     return (
         <View style={{

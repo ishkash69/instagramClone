@@ -62,8 +62,9 @@ const Home = ({ navigation, route }) => {
                 .get()
                 .then((querySnapshot) => {
                     // console.log('querySnapshot',querySnapshot.size)
+                
                     querySnapshot.forEach(doc => {
-                        const { post, postImg, likes, comments, userId, postTime, userName, userImg } = doc.data();
+                        const { post, postImg, nlikes, comments, userId, postTime, userName, userImg,likes } = doc.data();
                         list.push({
                             id: doc.id,
                             userId,
@@ -71,8 +72,7 @@ const Home = ({ navigation, route }) => {
                             userImg,
                             post: post,
                             postImg: postImg,
-                            liked: false,
-                            likes,
+                            nlikes,
                             comments,
                             postTime,
                         })
@@ -105,7 +105,7 @@ const Home = ({ navigation, route }) => {
                             .delete()
                             .then(() => {
                                 console.log(`${postImg} has been deleted successfully`)
-                                deleteFirestoreData(postId)
+                                deleteFirestoreData(postId),
                                 setDeleted(true)
                             })
                             .catch((error) => {

@@ -98,8 +98,8 @@ const PostUploader = ({ navigation, route,
             post: post,
             postImg: imageUrl,
             postTime: firestore.Timestamp.fromDate(new Date()),
-            likes: null,
-            comments: null
+            nlikes: null,
+            comments: null,
         }
         firestore().collection(tables.POSTS)
             .add(postObj)
@@ -164,7 +164,6 @@ const PostUploader = ({ navigation, route,
 
             <Modal isVisible={isModalVisible}
             >
-
                 <View
                     style={{
                         width: "80%",
